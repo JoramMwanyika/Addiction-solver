@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Create Recovery Plan{% endblock %}
+
+{% block content %}
+    <h1>Create Your Recovery Plan</h1>
+    <form method="POST">
+        <div>
+            <label for="addiction_type">Addiction Type:</label>
+            <input type="text" id="addiction_type" name="addiction_type" required>
+        </div>
+        <div>
+            <label for="goals">Goals:</label>
+            <textarea id="goals" name="goals" required></textarea>
+        </div>
+        <div>
+            <label for="strategies">Strategies:</label>
+            <textarea id="strategies" name="strategies" required></textarea>
+        </div>
+        <button type="submit">Create Plan</button>
+    </form>
+{% endblock %}
+

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <h1>Welcome, {{ current_user.username }}!</h1>
+    
+    {% if recovery_plan %}
+        <h2>Your Recovery Plan</h2>
+        <div class="recovery-plan">
+            <p><strong>Addiction Type:</strong> {{ recovery_plan.addiction_type }}</p>
+            <p><strong>Goals:</strong> {{ recovery_plan.goals }}</p>
+            <p><strong>Strategies:</strong> {{ recovery_plan.strategies }}</p>
+        </div>
+    {% else %}
+        <p>You haven't created a recovery plan yet.</p>
+        <a href="{{ url_for('create_recovery_plan') }}" class="button">Create Recovery Plan</a>
+    {% endif %}
+    
+    <h2>Recent Progress</h2>
+    {% if progress_logs %}
+        <div class="progress-logs">
+            {% for log in progress_logs %}
+                <div class="progress-log">
+                    <p><strong>Date:</strong> {{ log.date }}</p>
+                    <p><strong>Mood:</strong> {{ log.mood }}/10</p>
+                    <p><strong>Cravings:</strong> {{ log.cravings }}/10</p>
+                    <p><strong>Notes:</strong> {{ log.notes }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You haven't logged any progress yet.</p>
+    {% endif %}
+    
+    <a href="{{ url_for('log_progress') }}" class="button">Log Progress</a>
+{% endblock %}
+

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <h1>Login</h1>
+            <form method="POST" class="auth-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+            <div class="auth-separator">
+                <span>or</span>
+            </div>
+            <a href="{{ url_for('google_login') }}" class="btn btn-google btn-block">
+                <i class="fab fa-google"></i> Sign in with Google
+            </a>
+            <p class="auth-link">Don't have an account? <a href="{{ url_for('register') }}">Sign up</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

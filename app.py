@@ -8,6 +8,7 @@ from flask_dance.consumer import oauth_authorized
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
 import os
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or os.urandom(24)
@@ -16,6 +17,7 @@ app.config['GOOGLE_OAUTH_CLIENT_ID'] = os.environ.get('GOOGLE_OAUTH_CLIENT_ID')
 app.config['GOOGLE_OAUTH_CLIENT_SECRET'] = os.environ.get('GOOGLE_OAUTH_CLIENT_SECRET')
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
@@ -196,8 +198,12 @@ def google_login():
         return redirect(url_for('google.login'))
     return redirect(url_for('dashboard'))
 
-if __name__ == '__main__':
+def init_db():
     with app.app_context():
         db.create_all()
+        print("Database tables created.")
+
+if __name__ == '__main__':
+    init_db()
     app.run(debug=True)
 

@@ -57,21 +57,50 @@
             <div class="testimonial">
                 <div class="testimonial-content">
                     <p>"Addiction Solver gave me the tools and support I needed to turn my life around. I'm now 2 years sober and happier than ever."</p>
-                    <cite>- Sarah M.</cite>
+                    <div class="testimonial-meta">
+                        <div class="testimonial-avatar">
+                            <img src="{{ url_for('static', filename='images/testimonials/sarah.jpg') }}" alt="Sarah M." onerror="this.src='{{ url_for('static', filename='images/testimonials/default-avatar.jpg') }}'">
+                        </div>
+                        <div class="testimonial-info">
+                            <cite>Sarah M.</cite>
+                            <span class="testimonial-role">2 Years Sober</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="testimonial">
                 <div class="testimonial-content">
-                    <p>"The community here is incredible. Knowing I'm not alone in this journey has made all the difference."</p>
-                    <cite>- John D.</cite>
+                    <p>"The community here is incredible. Knowing I'm not alone in this journey has made all the difference. The support and understanding I've found here is priceless."</p>
+                    <div class="testimonial-meta">
+                        <div class="testimonial-avatar">
+                            <img src="{{ url_for('static', filename='images/testimonials/john.jpg') }}" alt="John D." onerror="this.src='{{ url_for('static', filename='images/testimonials/default-avatar.jpg') }}'">
+                        </div>
+                        <div class="testimonial-info">
+                            <cite>John D.</cite>
+                            <span class="testimonial-role">6 Months Clean</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="testimonial">
                 <div class="testimonial-content">
-                    <p>"The personalized recovery plan helped me tackle my addiction one day at a time. I'm grateful for this platform."</p>
-                    <cite>- Emily R.</cite>
+                    <p>"The personalized recovery plan helped me tackle my addiction one day at a time. I'm grateful for this platform and the tools it provides for long-term success."</p>
+                    <div class="testimonial-meta">
+                        <div class="testimonial-avatar">
+                            <img src="{{ url_for('static', filename='images/testimonials/emily.jpg') }}" alt="Emily R." onerror="this.src='{{ url_for('static', filename='images/testimonials/default-avatar.jpg') }}'">
+                        </div>
+                        <div class="testimonial-info">
+                            <cite>Emily R.</cite>
+                            <span class="testimonial-role">1 Year Recovery</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="testimonial-dots">
+            <div class="testimonial-dot active"></div>
+            <div class="testimonial-dot"></div>
+            <div class="testimonial-dot"></div>
         </div>
     </div>
 </section>

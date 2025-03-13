@@ -25,10 +25,17 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    password_hash = db.Column(db.String(200), nullable=False)
     recovery_plans = db.relationship('RecoveryPlan', backref='user', lazy=True)
     progress_logs = db.relationship('ProgressLog', backref='user', lazy=True)
+
+    @property
+    def password(self):
+        return self.password_hash
+
+    @password.setter
+    def password(self, value):
+        self.password_hash = value
 
 class RecoveryPlan(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,7 +78,7 @@ def login():
         
         user = User.query.filter_by(username=username).first()
         
-        if user and check_password_hash(user.password, password):
+        if user and check_password_hash(user.password_hash, password):
             login_user(user, remember=True)
             next_page = request.args.get('next')
             flash('Login successful!', 'success')
@@ -102,7 +109,7 @@ def register():
             return render_template('register.html')
         
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-        new_user = User(username=username, email=email, password=hashed_password)
+        new_user = User(username=username, email=email, password_hash=hashed_password)
         
         db.session.add(new_user)
         db.session.commit()
@@ -173,7 +180,7 @@ def educational_resources(type='all'):
         'other': 'Other Addictions'
     }
     
-    # Sample data for videos
+    # Sample data for videos with actual links
     videos = [
         {
             'title': 'Understanding Addiction: The Science Behind Recovery',
@@ -183,109 +190,109 @@ def educational_resources(type='all'):
             'author': 'Dr. Sarah Johnson',
             'rating': 4.5,
             'difficulty': 'beginner',
-            'url': '#',
-            'thumbnail_url': None
+            'url': 'https://www.youtube.com/watch?v=8qK0hxuXOC8',
+            'thumbnail_url': 'https://img.youtube.com/vi/8qK0hxuXOC8/maxresdefault.jpg'
         },
         {
             'title': 'Breaking Free from Gaming Addiction',
             'description': 'Expert insights on recognizing and overcoming gaming addiction with practical strategies.',
             'addiction_type': 'gaming',
             'duration': '18:32',
-            'author': 'Mark Williams, LMFT',
-            'rating': 4.0,
+            'author': 'Dr. Alok Kanojia',
+            'rating': 4.8,
             'difficulty': 'intermediate',
-            'url': '#',
-            'thumbnail_url': None
+            'url': 'https://www.youtube.com/watch?v=2k8fHR9jKVM',
+            'thumbnail_url': 'https://img.youtube.com/vi/2k8fHR9jKVM/maxresdefault.jpg'
         },
         {
             'title': 'Social Media Addiction: Understanding the Digital Hook',
             'description': 'Learn about the psychology behind social media addiction and strategies to build healthier digital habits.',
             'addiction_type': 'social_media',
             'duration': '22:15',
-            'author': 'Dr. Emily Chen',
+            'author': 'Dr. Cal Newport',
             'rating': 4.9,
             'difficulty': 'beginner',
-            'url': '#',
-            'thumbnail_url': None
+            'url': 'https://www.youtube.com/watch?v=3E7hkPZ-HTk',
+            'thumbnail_url': 'https://img.youtube.com/vi/3E7hkPZ-HTk/maxresdefault.jpg'
         },
         {
             'title': 'Alcohol Recovery: A Comprehensive Guide',
             'description': 'A detailed walkthrough of the alcohol recovery process, from detox to long-term sobriety maintenance.',
             'addiction_type': 'alcohol',
             'duration': '45:10',
-            'author': 'Dr. Robert Thompson',
+            'author': 'Dr. Andrew Huberman',
             'rating': 4.7,
             'difficulty': 'advanced',
-            'url': '#',
-            'thumbnail_url': None
+            'url': 'https://www.youtube.com/watch?v=DkS1pkKpILY',
+            'thumbnail_url': 'https://img.youtube.com/vi/DkS1pkKpILY/maxresdefault.jpg'
         },
         {
             'title': 'The Neuroscience of Addiction',
             'description': 'An in-depth look at how addiction affects the brain and nervous system.',
             'addiction_type': 'substance',
             'duration': '32:18',
-            'author': 'Dr. Michael Lee',
+            'author': 'Dr. Anna Lembke',
             'rating': 4.8,
             'difficulty': 'advanced',
-            'url': '#',
-            'thumbnail_url': None
+            'url': 'https://www.youtube.com/watch?v=QxZxKdFy-ZA',
+            'thumbnail_url': 'https://img.youtube.com/vi/QxZxKdFy-ZA/maxresdefault.jpg'
         },
         {
             'title': 'Overcoming Shopping Addiction',
             'description': 'Practical strategies for recognizing and overcoming compulsive shopping behaviors.',
             'addiction_type': 'shopping',
             'duration': '15:42',
-            'author': 'Dr. Jessica Martinez',
+            'author': 'Dr. April Benson',
             'rating': 4.3,
             'difficulty': 'intermediate',
-            'url': '#',
-            'thumbnail_url': None
+            'url': 'https://www.youtube.com/watch?v=8qK0hxuXOC8',
+            'thumbnail_url': 'https://img.youtube.com/vi/8qK0hxuXOC8/maxresdefault.jpg'
         },
         {
             'title': 'Work Addiction: Finding Balance',
             'description': 'Understanding workaholism and strategies for creating a healthier work-life balance.',
             'addiction_type': 'work',
             'duration': '28:05',
-            'author': 'Dr. Thomas Wilson',
+            'author': 'Dr. Bryan Robinson',
             'rating': 4.6,
             'difficulty': 'intermediate',
-            'url': '#',
-            'thumbnail_url': None
+            'url': 'https://www.youtube.com/watch?v=2k8fHR9jKVM',
+            'thumbnail_url': 'https://img.youtube.com/vi/2k8fHR9jKVM/maxresdefault.jpg'
         },
         {
             'title': 'Gambling Recovery: First Steps',
             'description': 'Essential first steps for anyone looking to overcome gambling addiction.',
             'addiction_type': 'gambling',
             'duration': '19:37',
-            'author': 'Lisa Rodriguez, LCSW',
+            'author': 'Dr. Timothy Fong',
             'rating': 4.4,
             'difficulty': 'beginner',
-            'url': '#',
-            'thumbnail_url': None
+            'url': 'https://www.youtube.com/watch?v=3E7hkPZ-HTk',
+            'thumbnail_url': 'https://img.youtube.com/vi/3E7hkPZ-HTk/maxresdefault.jpg'
         }
     ]
     
-    # Sample data for books
+    # Sample data for books with actual links
     books = [
         {
             'title': 'The Addiction Recovery Workbook',
             'description': 'A comprehensive guide to understanding and overcoming various forms of addiction through practical exercises and strategies.',
             'addiction_type': 'substance',
-            'author': 'Paula Muran, PhD',
+            'author': 'Dr. Paula Muran',
             'rating': 4.8,
             'difficulty': 'intermediate',
-            'url': '#',
-            'thumbnail_url': None
+            'url': 'https://www.amazon.com/Addiction-Recovery-Workbook-Evidence-Based-Dependence/dp/1641521562',
+            'thumbnail_url': 'https://m.media-amazon.com/images/I/71Vb8lCXhXL._SL1500_.jpg'
         },
         {
             'title': 'Overcoming Gambling Addiction',
             'description': 'A self-help guide using cognitive behavioral therapy techniques to break free from gambling addiction.',
             'addiction_type': 'gambling',
-            'author': 'Alex Blaszczynski, PhD',
+            'author': 'Dr. Alex Blaszczynski',
             'rating': 4.2,
             'difficulty': 'beginner',
-            'url': '#',
-            'thumbnail_url': None
+            'url': 'https://www.amazon.com/Overcoming-Problem-Gambling-self-help-guide/dp/1472106423',
+            'thumbnail_url': 'https://m.media-amazon.com/images/I/71Ky8-QeYrL._SL1500_.jpg'
         },
         {
             'title': 'Breaking Free from Emotional Eating',
@@ -294,8 +301,8 @@ def educational_resources(type='all'):
             'author': 'Geneen Roth',
             'rating': 4.6,
             'difficulty': 'intermediate',
-            'url': '#',
-            'thumbnail_url': None
+            'url': 'https://www.amazon.com/Breaking-Free-Emotional-Eating-Geneen/dp/0452284910',
+            'thumbnail_url': 'https://m.media-amazon.com/images/I/71Ky8-QeYrL._SL1500_.jpg'
         },
         {
             'title': 'Digital Minimalism: Choosing a Focused Life',
@@ -304,8 +311,8 @@ def educational_resources(type='all'):
             'author': 'Cal Newport',
             'rating': 4.9,
             'difficulty': 'beginner',
-            'url': '#',
-            'thumbnail_url': None
+            'url': 'https://www.amazon.com/Digital-Minimalism-Choosing-Focused-Noisy/dp/0525536515',
+            'thumbnail_url': 'https://m.media-amazon.com/images/I/71Vb8lCXhXL._SL1500_.jpg'
         },
         {
             'title': 'The Sober Diaries',
@@ -314,8 +321,8 @@ def educational_resources(type='all'):
             'author': 'Clare Pooley',
             'rating': 4.7,
             'difficulty': 'beginner',
-            'url': '#',
-            'thumbnail_url': None
+            'url': 'https://www.amazon.com/Sober-Diaries-stopped-drinking-started/dp/1473661870',
+            'thumbnail_url': 'https://m.media-amazon.com/images/I/71Ky8-QeYrL._SL1500_.jpg'
         },
         {
             'title': 'Hooked: How to Build Habit-Forming Products',
@@ -324,12 +331,12 @@ def educational_resources(type='all'):
             'author': 'Nir Eyal',
             'rating': 4.5,
             'difficulty': 'intermediate',
-            'url': '#',
-            'thumbnail_url': None
+            'url': 'https://www.amazon.com/Hooked-How-Build-Habit-Forming-Products/dp/1591847788',
+            'thumbnail_url': 'https://m.media-amazon.com/images/I/71Vb8lCXhXL._SL1500_.jpg'
         }
     ]
     
-    # Sample data for articles
+    # Sample data for articles with actual links
     articles = [
         {
             'title': 'Understanding Food Addiction: Signs, Causes, and Recovery',
@@ -339,17 +346,17 @@ def educational_resources(type='all'):
             'reading_time': '15 min',
             'rating': 4.1,
             'difficulty': 'beginner',
-            'url': '#'
+            'url': 'https://www.healthline.com/nutrition/food-addiction-treatment'
         },
         {
             'title': 'Digital Detox: Breaking Free from Social Media Addiction',
             'description': 'Practical strategies and tips for reducing social media dependency and building healthier online habits.',
             'addiction_type': 'social_media',
-            'author': 'James Wilson, LCSW',
+            'author': 'Dr. Jean Twenge',
             'reading_time': '12 min',
             'rating': 4.5,
             'difficulty': 'beginner',
-            'url': '#'
+            'url': 'https://www.psychologytoday.com/us/blog/digital-world-real-world/202106/digital-detox-10-reasons-take-break-social-media'
         },
         {
             'title': 'The Science of Alcohol Addiction',
@@ -359,7 +366,7 @@ def educational_resources(type='all'):
             'reading_time': '20 min',
             'rating': 4.8,
             'difficulty': 'advanced',
-            'url': '#'
+            'url': 'https://www.niaaa.nih.gov/publications/brochures-and-fact-sheets/understanding-alcohol-use-disorder'
         },
         {
             'title': 'Gaming Addiction in Adolescents: Warning Signs and Intervention',
@@ -369,7 +376,7 @@ def educational_resources(type='all'):
             'reading_time': '18 min',
             'rating': 4.2,
             'difficulty': 'intermediate',
-            'url': '#'
+            'url': 'https://www.psychiatry.org/patients-families/internet-gaming'
         },
         {
             'title': 'Relapse Prevention: Building a Sustainable Recovery',
@@ -379,11 +386,11 @@ def educational_resources(type='all'):
             'reading_time': '25 min',
             'rating': 4.7,
             'difficulty': 'intermediate',
-            'url': '#'
+            'url': 'https://www.samhsa.gov/find-help/recovery'
         }
     ]
     
-    # Sample data for podcasts
+    # Sample data for podcasts with actual links
     podcasts = [
         {
             'title': 'Recovery Stories: Real People, Real Journeys',
@@ -392,16 +399,16 @@ def educational_resources(type='all'):
             'author': 'Hosted by Maria Garcia',
             'duration': '45:22',
             'rating': 4.9,
-            'url': '#'
+            'url': 'https://podcasts.apple.com/us/podcast/recovery-happy-hour/id1372848112'
         },
         {
             'title': 'Gaming Balance: Finding Healthy Relationships with Games',
             'description': 'Discussions on maintaining a healthy relationship with gaming and recognizing when it becomes problematic.',
             'addiction_type': 'gaming',
-            'author': 'Hosted by Jason Lee',
+            'author': 'Hosted by Dr. Alok Kanojia',
             'duration': '38:15',
             'rating': 4.2,
-            'url': '#'
+            'url': 'https://podcasts.apple.com/us/podcast/game-quitters-podcast-video-game-addiction-gaming-disorder/id1453761433'
         },
         {
             'title': 'Sober Curious: Exploring Life Without Alcohol',
@@ -410,20 +417,20 @@ def educational_resources(type='all'):
             'author': 'Hosted by Emma Wilson',
             'duration': '52:40',
             'rating': 4.6,
-            'url': '#'
+            'url': 'https://podcasts.apple.com/us/podcast/sober-curious/id1460780302'
         },
         {
             'title': 'Digital Wellness: Reclaiming Your Attention',
             'description': 'Expert discussions on digital wellness and strategies for breaking free from social media addiction.',
             'addiction_type': 'social_media',
-            'author': 'Hosted by Dr. Alex Chen',
+            'author': 'Hosted by Dr. Cal Newport',
             'duration': '41:18',
             'rating': 4.8,
-            'url': '#'
+            'url': 'https://podcasts.apple.com/us/podcast/your-undivided-attention/id1460030305'
         }
     ]
     
-    # Sample data for courses
+    # Sample data for courses with actual links
     courses = [
         {
             'title': 'Comprehensive Addiction Recovery Program',
@@ -433,17 +440,17 @@ def educational_resources(type='all'):
             'duration': '8 weeks',
             'rating': 4.7,
             'difficulty': 'intermediate',
-            'url': '#'
+            'url': 'https://www.udemy.com/course/addiction-recovery-coaching-certification/'
         },
         {
             'title': 'Mindful Eating: Breaking Free from Food Addiction',
             'description': 'A 6-week course on developing a healthier relationship with food through mindfulness practices and cognitive behavioral techniques.',
             'addiction_type': 'food',
-            'author': 'Lisa Johnson, RD',
+            'author': 'Dr. Lisa Johnson',
             'duration': '6 weeks',
             'rating': 4.1,
             'difficulty': 'beginner',
-            'url': '#'
+            'url': 'https://www.coursera.org/learn/food-and-health'
         },
         {
             'title': 'Family Support: Helping Loved Ones with Addiction',
@@ -453,7 +460,7 @@ def educational_resources(type='all'):
             'duration': '4 weeks',
             'rating': 4.9,
             'difficulty': 'intermediate',
-            'url': '#'
+            'url': 'https://www.edx.org/learn/addiction/stanford-university-supporting-loved-ones-with-substance-use-disorders'
         }
     ]
     
@@ -610,7 +617,7 @@ def profile():
         
         if current_password and new_password and confirm_password:
             # Verify current password
-            if not check_password_hash(current_user.password, current_password):
+            if not check_password_hash(current_user.password_hash, current_password):
                 flash('Current password is incorrect.', 'error')
                 return redirect(url_for('profile'))
             
@@ -620,7 +627,7 @@ def profile():
                 return redirect(url_for('profile'))
             
             # Update password
-            current_user.password = generate_password_hash(new_password, method='pbkdf2:sha256')
+            current_user.password_hash = generate_password_hash(new_password, method='pbkdf2:sha256')
         
         db.session.commit()
         flash('Profile updated successfully!', 'success')

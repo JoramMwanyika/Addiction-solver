@@ -21,19 +21,78 @@ document.addEventListener('DOMContentLoaded', function() {
     const testimonialSlider = document.querySelector('.testimonial-slider');
     if (testimonialSlider) {
         const testimonials = testimonialSlider.querySelectorAll('.testimonial');
+        const dots = document.querySelectorAll('.testimonial-dot');
         let currentIndex = 0;
+        let autoScrollInterval;
         
-        function scrollToNextTestimonial() {
-            currentIndex = (currentIndex + 1) % testimonials.length;
+        function updateDots() {
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+        
+        function scrollToTestimonial(index) {
+            currentIndex = index;
             testimonials[currentIndex].scrollIntoView({
                 behavior: 'smooth',
                 block: 'nearest',
                 inline: 'start'
             });
+            updateDots();
         }
         
-        // Auto-scroll every 5 seconds
-        setInterval(scrollToNextTestimonial, 5000);
+        function scrollToNextTestimonial() {
+            currentIndex = (currentIndex + 1) % testimonials.length;
+            scrollToTestimonial(currentIndex);
+        }
+        
+        // Add click handlers to dots
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                scrollToTestimonial(index);
+            });
+        });
+        
+        // Pause auto-scroll on hover
+        testimonialSlider.addEventListener('mouseenter', () => {
+            clearInterval(autoScrollInterval);
+        });
+        
+        testimonialSlider.addEventListener('mouseleave', () => {
+            autoScrollInterval = setInterval(scrollToNextTestimonial, 5000);
+        });
+        
+        // Start auto-scroll
+        autoScrollInterval = setInterval(scrollToNextTestimonial, 5000);
+        
+        // Handle touch events for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        testimonialSlider.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        testimonialSlider.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe left
+                    scrollToNextTestimonial();
+                } else {
+                    // Swipe right
+                    currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+                    scrollToTestimonial(currentIndex);
+                }
+            }
+        }
     }
     
     // Dropdown functionality

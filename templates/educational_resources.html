@@ -2,387 +2,6 @@
 
 {% block title %}Educational Resources{% endblock %}
 
-{% block extra_css %}
-<style>
-    .filter-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-top: 1rem;
-    }
-    
-    .filter-tag {
-        background-color: rgba(67, 97, 238, 0.1);
-        color: var(--primary-color);
-        border-radius: 50px;
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: var(--transition);
-    }
-    
-    .filter-tag:hover {
-        background-color: rgba(67, 97, 238, 0.2);
-    }
-    
-    .filter-tag .remove {
-        cursor: pointer;
-        font-size: 0.75rem;
-    }
-    
-    .filter-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-top: 1rem;
-    }
-    
-    .filter-option {
-        background-color: var(--background-color);
-        border-radius: var(--border-radius);
-        padding: 0.75rem;
-        cursor: pointer;
-        transition: var(--transition);
-        text-align: center;
-    }
-    
-    .filter-option:hover {
-        background-color: rgba(67, 97, 238, 0.1);
-    }
-    
-    .filter-option.active {
-        background-color: var(--primary-color);
-        color: white;
-    }
-    
-    .resource-badge {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background-color: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 0.25rem 0.75rem;
-        border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        z-index: 2;
-    }
-    
-    .resource-duration {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        font-size: 0.75rem;
-        color: var(--text-light);
-        margin-top: 0.5rem;
-    }
-    
-    .resource-author {
-        font-size: 0.875rem;
-        color: var(--text-light);
-        margin-top: 0.5rem;
-    }
-    
-    .resource-rating {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        margin-top: 0.5rem;
-    }
-    
-    .resource-rating i {
-        color: #f1c40f;
-        font-size: 0.875rem;
-    }
-    
-    .resource-rating span {
-        font-size: 0.875rem;
-        font-weight: 600;
-    }
-    
-    .resource-difficulty {
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        border-radius: 50px;
-        margin-top: 0.5rem;
-        display: inline-block;
-    }
-    
-    .difficulty-beginner {
-        background-color: rgba(46, 204, 113, 0.1);
-        color: #27ae60;
-    }
-    
-    .difficulty-intermediate {
-        background-color: rgba(243, 156, 18, 0.1);
-        color: #f39c12;
-    }
-    
-    .difficulty-advanced {
-        background-color: rgba(231, 76, 60, 0.1);
-        color: #e74c3c;
-    }
-    
-    /* Advanced Filter Dropdown */
-    .filter-dropdown {
-        position: relative;
-    }
-    
-    .filter-dropdown-menu {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        z-index: 1000;
-        display: none;
-        min-width: 300px;
-        max-width: 500px;
-        padding: 1rem;
-        margin: 0.5rem 0 0;
-        background-color: var(--card-color);
-        border-radius: var(--border-radius);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-    
-    .filter-dropdown-menu.show {
-        display: block;
-    }
-    
-    .filter-dropdown-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid var(--border-color);
-    }
-    
-    .filter-dropdown-close {
-        background: none;
-        border: none;
-        font-size: 1.25rem;
-        cursor: pointer;
-        color: var(--text-color);
-    }
-    
-    .filter-dropdown-section {
-        margin-bottom: 1.5rem;
-    }
-    
-    .filter-dropdown-section:last-child {
-        margin-bottom: 0;
-    }
-    
-    .filter-dropdown-title {
-        font-size: 0.875rem;
-        font-weight: 600;
-        margin-bottom: 0.75rem;
-    }
-    
-    .filter-dropdown-options {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-    
-    .filter-dropdown-option {
-        background-color: var(--background-color);
-        border-radius: var(--border-radius);
-        padding: 0.5rem 0.75rem;
-        font-size: 0.875rem;
-        cursor: pointer;
-        transition: var(--transition);
-    }
-    
-    .filter-dropdown-option:hover {
-        background-color: rgba(67, 97, 238, 0.1);
-    }
-    
-    .filter-dropdown-option.active {
-        background-color: var(--primary-color);
-        color: white;
-    }
-    
-    .filter-dropdown-actions {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 1.5rem;
-        padding-top: 1rem;
-        border-top: 1px solid var(--border-color);
-    }
-    
-    /* Resource Cards */
-    .resources-section {
-        margin-bottom: 3rem;
-    }
-    
-    .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-    }
-    
-    .section-title {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 1.5rem;
-        font-weight: 600;
-    }
-    
-    .resource-count {
-        background-color: var(--muted-color);
-        color: var(--text-light);
-        padding: 0.25rem 0.75rem;
-        border-radius: 50px;
-        font-size: 0.875rem;
-    }
-    
-    .resources-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 1.5rem;
-    }
-    
-    .resource-card {
-        background-color: var(--card-color);
-        border-radius: var(--border-radius);
-        overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        transition: var(--transition);
-    }
-    
-    .resource-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    .card-media {
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .placeholder-media {
-        background-color: var(--muted-color);
-        aspect-ratio: 16 / 9;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--text-light);
-        font-size: 2rem;
-    }
-    
-    .book-card .placeholder-media {
-        aspect-ratio: 2 / 3;
-    }
-    
-    .play-overlay {
-        position: absolute;
-        inset: 0;
-        background-color: rgba(0, 0, 0, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: var(--transition);
-    }
-    
-    .play-overlay i {
-        color: white;
-        font-size: 3rem;
-    }
-    
-    .card-media:hover .play-overlay {
-        opacity: 1;
-    }
-    
-    .card-content {
-        padding: 1.25rem;
-    }
-    
-    .resource-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-bottom: 0.75rem;
-    }
-    
-    .resource-type {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        background-color: rgba(67, 97, 238, 0.1);
-        color: var(--primary-color);
-        padding: 0.25rem 0.5rem;
-        border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 500;
-    }
-    
-    .resource-category {
-        background-color: var(--muted-color);
-        color: var(--text-light);
-        padding: 0.25rem 0.5rem;
-        border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 500;
-    }
-    
-    .card-title {
-        font-size: 1.125rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        line-height: 1.4;
-    }
-    
-    .card-text {
-        color: var(--text-light);
-        font-size: 0.875rem;
-        margin-bottom: 1rem;
-        line-height: 1.5;
-    }
-    
-    .article-card {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .article-card .card-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .article-card .btn {
-        margin-top: auto;
-    }
-    
-    @media (max-width: 768px) {
-        .filter-controls {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-        
-        .filter-dropdown-menu {
-            position: fixed;
-            top: auto;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            max-width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            border-radius: var(--border-radius) var(--border-radius) 0 0;
-            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
-        }
-    }
-</style>
-{% endblock %}
 
 {% block content %}
 <div class="educational-resources">
@@ -390,12 +9,42 @@
         <div class="container">
             <div class="hero-content">
                 <h1>Educational Resources</h1>
-                <p>Discover curated content to support your recovery journey</p>
+                <p>Explore our curated collection of resources to support your recovery journey.</p>
             </div>
         </div>
     </div>
 
     <div class="container">
+        <div class="search-section">
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search resources..." class="search-input">
+                </div>
+                <div class="filter-controls">
+                    <button class="btn-filter" type="button" aria-expanded="false">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item {% if current_type == 'all' %}active{% endif %}" href="{{ url_for('educational_resources') }}">
+                            <i class="fas fa-globe"></i> All Resources
+                        </a></li>
+                        {% for type_key, type_name in addiction_types.items() %}
+                        <li><a class="dropdown-item {% if current_type == type_key %}active{% endif %}" href="{{ url_for('educational_resources', type=type_key) }}">
+                            <i class="fas fa-{{ type_key }}"></i> {{ type_name }}
+                        </a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="search-tags">
+                <span class="search-tag">Videos</span>
+                <span class="search-tag">Books</span>
+                <span class="search-tag">Articles</span>
+                <span class="search-tag">Courses</span>
+            </div>
+        </div>
+
         <!-- Filter Section -->
         <div class="filter-section">
             <div class="filter-header">
@@ -476,44 +125,6 @@
                         </div>
                     </div>
                     
-                    <!-- Addiction Type Filter Dropdown -->
-                    <div class="dropdown">
-                        <button class="btn btn-filter dropdown-toggle" type="button" id="addictionTypeFilter" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-filter"></i>{{ addiction_types.get(current_type, 'All Types') }}
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="addictionTypeFilter">
-                            <li>
-                                <a class="dropdown-item {{ 'active' if current_type == 'all' }}" 
-                                   href="{{ url_for('educational_resources', type='all') }}">
-                                   All Types
-                                </a>
-                            </li>
-                            {% for type, name in addiction_types.items() %}
-                            <li>
-                                <a class="dropdown-item {{ 'active' if current_type == type }}" 
-                                   href="{{ url_for('educational_resources', type=type) }}">
-                                   {{ name }}
-                                </a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    
-                    <!-- Resource Type Filter Dropdown -->
-                    <div class="dropdown">
-                        <button class="btn btn-filter dropdown-toggle" type="button" id="resourceTypeFilter" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-th-large"></i> All Resources
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="resourceTypeFilter">
-                            <li><a class="dropdown-item active" href="#">All Resources</a></li>
-                            <li><a class="dropdown-item" href="#">Videos</a></li>
-                            <li><a class="dropdown-item" href="#">Books</a></li>
-                            <li><a class="dropdown-item" href="#">Articles</a></li>
-                            <li><a class="dropdown-item" href="#">Podcasts</a></li>
-                            <li><a class="dropdown-item" href="#">Courses</a></li>
-                        </ul>
-                    </div>
-                    
                     <!-- Sort Filter Dropdown -->
                     <div class="dropdown">
                         <button class="btn btn-filter dropdown-toggle" type="button" id="sortFilter" data-bs-toggle="dropdown" aria-expanded="false">
@@ -548,312 +159,49 @@
                 <h2 class="section-title">
                     <i class="fas fa-play-circle"></i>Videos
                 </h2>
-                <span class="resource-count">8 videos</span>
+                <span class="resource-count">{{ videos|length }} videos</span>
             </div>
             <div class="resources-grid">
-                <!-- Video 1 -->
+                {% for video in videos %}
                 <div class="resource-card video-card">
                     <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-play-circle"></i>
-                        </div>
+                        <img src="{{ video.thumbnail_url }}" alt="{{ video.title }}">
                         <div class="play-overlay">
                             <i class="fas fa-play"></i>
                         </div>
-                        <div class="resource-badge">12:45</div>
+                        <div class="resource-badge">{{ video.duration }}</div>
                     </div>
                     <div class="card-content">
                         <div class="resource-meta">
                             <span class="resource-type">
                                 <i class="fas fa-video"></i>Video
                             </span>
-                            <span class="resource-category">Substance Abuse</span>
+                            <span class="resource-category">{{ addiction_types[video.addiction_type] }}</span>
                         </div>
-                        <h3 class="card-title">Understanding Addiction: The Science Behind Recovery</h3>
-                        <p class="card-text">A comprehensive overview of how addiction affects the brain and practical steps for recovery.</p>
+                        <h3 class="card-title">{{ video.title }}</h3>
+                        <p class="card-text">{{ video.description }}</p>
                         <div class="resource-author">
-                            <i class="fas fa-user"></i> Dr. Sarah Johnson
+                            <i class="fas fa-user"></i> {{ video.author }}
                         </div>
                         <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>4.5</span>
+                            {% for i in range(5) %}
+                                {% if i < video.rating|int %}
+                                    <i class="fas fa-star"></i>
+                                {% elif video.rating - i >= 0.5 %}
+                                    <i class="fas fa-star-half-alt"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                            <span>{{ video.rating }}</span>
                         </div>
-                        <span class="resource-difficulty difficulty-beginner">Beginner</span>
-                        <a href="#" class="btn btn-primary">
+                        <span class="resource-difficulty difficulty-{{ video.difficulty }}">{{ video.difficulty|title }}</span>
+                        <a href="{{ video.url }}" class="btn btn-primary" target="_blank">
                             Watch Now
                         </a>
                     </div>
                 </div>
-                
-                <!-- Video 2 -->
-                <div class="resource-card video-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-play-circle"></i>
-                        </div>
-                        <div class="play-overlay">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="resource-badge">18:32</div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-video"></i>Video
-                            </span>
-                            <span class="resource-category">Gaming</span>
-                        </div>
-                        <h3 class="card-title">Breaking Free from Gaming Addiction</h3>
-                        <p class="card-text">Expert insights on recognizing and overcoming gaming addiction with practical strategies.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Mark Williams, LMFT
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                            <span>4.0</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-intermediate">Intermediate</span>
-                        <a href="#" class="btn btn-primary">
-                            Watch Now
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Video 3 -->
-                <div class="resource-card video-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-play-circle"></i>
-                        </div>
-                        <div class="play-overlay">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="resource-badge">22:15</div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-video"></i>Video
-                            </span>
-                            <span class="resource-category">Social Media</span>
-                        </div>
-                        <h3 class="card-title">Social Media Addiction: Understanding the Digital Hook</h3>
-                        <p class="card-text">Learn about the psychology behind social media addiction and strategies to build healthier digital habits.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Dr. Emily Chen
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>4.9</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-beginner">Beginner</span>
-                        <a href="#" class="btn btn-primary">
-                            Watch Now
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Video 4 -->
-                <div class="resource-card video-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-play-circle"></i>
-                        </div>
-                        <div class="play-overlay">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="resource-badge">45:10</div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-video"></i>Video
-                            </span>
-                            <span class="resource-category">Alcohol</span>
-                        </div>
-                        <h3 class="card-title">Alcohol Recovery: A Comprehensive Guide</h3>
-                        <p class="card-text">A detailed walkthrough of the alcohol recovery process, from detox to long-term sobriety maintenance.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Dr. Robert Thompson
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>4.7</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-advanced">Advanced</span>
-                        <a href="#" class="btn btn-primary">
-                            Watch Now
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Video 5 (New) -->
-                <div class="resource-card video-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-play-circle"></i>
-                        </div>
-                        <div class="play-overlay">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="resource-badge">32:18</div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-video"></i>Video
-                            </span>
-                            <span class="resource-category">Substance Abuse</span>
-                        </div>
-                        <h3 class="card-title">The Neuroscience of Addiction</h3>
-                        <p class="card-text">An in-depth look at how addiction affects the brain and nervous system.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Dr. Michael Lee
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>4.8</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-advanced">Advanced</span>
-                        <a href="#" class="btn btn-primary">
-                            Watch Now
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Video 6 (New) -->
-                <div class="resource-card video-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-play-circle"></i>
-                        </div>
-                        <div class="play-overlay">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="resource-badge">15:42</div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-video"></i>Video
-                            </span>
-                            <span class="resource-category">Shopping</span>
-                        </div>
-                        <h3 class="card-title">Overcoming Shopping Addiction</h3>
-                        <p class="card-text">Practical strategies for recognizing and overcoming compulsive shopping behaviors.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Dr. Jessica Martinez
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>4.3</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-intermediate">Intermediate</span>
-                        <a href="#" class="btn btn-primary">
-                            Watch Now
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Video 7 (New) -->
-                <div class="resource-card video-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-play-circle"></i>
-                        </div>
-                        <div class="play-overlay">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="resource-badge">28:05</div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-video"></i>Video
-                            </span>
-                            <span class="resource-category">Work</span>
-                        </div>
-                        <h3 class="card-title">Work Addiction: Finding Balance</h3>
-                        <p class="card-text">Understanding workaholism and strategies for creating a healthier work-life balance.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Dr. Thomas Wilson
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>4.6</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-intermediate">Intermediate</span>
-                        <a href="#" class="btn btn-primary">
-                            Watch Now
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Video 8 (New) -->
-                <div class="resource-card video-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-play-circle"></i>
-                        </div>
-                        <div class="play-overlay">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="resource-badge">19:37</div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-video"></i>Video
-                            </span>
-                            <span class="resource-category">Gambling</span>
-                        </div>
-                        <h3 class="card-title">Gambling Recovery: First Steps</h3>
-                        <p class="card-text">Essential first steps for anyone looking to overcome gambling addiction.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Lisa Rodriguez, LCSW
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>4.4</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-beginner">Beginner</span>
-                        <a href="#" class="btn btn-primary">
-                            Watch Now
-                        </a>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
 
@@ -863,212 +211,45 @@
                 <h2 class="section-title">
                     <i class="fas fa-book"></i>Books
                 </h2>
-                <span class="resource-count">6 books</span>
+                <span class="resource-count">{{ books|length }} books</span>
             </div>
             <div class="resources-grid">
-                <!-- Book 1 -->
+                {% for book in books %}
                 <div class="resource-card book-card">
                     <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-book"></i>
-                        </div>
+                        <img src="{{ book.thumbnail_url }}" alt="{{ book.title }}">
                     </div>
                     <div class="card-content">
                         <div class="resource-meta">
                             <span class="resource-type">
                                 <i class="fas fa-book"></i>Book
                             </span>
-                            <span class="resource-category">Substance Abuse</span>
+                            <span class="resource-category">{{ addiction_types[book.addiction_type] }}</span>
                         </div>
-                        <h3 class="card-title">The Addiction Recovery Workbook</h3>
-                        <p class="card-text">A comprehensive guide to understanding and overcoming various forms of addiction through practical exercises and strategies.</p>
+                        <h3 class="card-title">{{ book.title }}</h3>
+                        <p class="card-text">{{ book.description }}</p>
                         <div class="resource-author">
-                            <i class="fas fa-user"></i> Paula Muran, PhD
+                            <i class="fas fa-user"></i> {{ book.author }}
                         </div>
                         <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>4.8</span>
+                            {% for i in range(5) %}
+                                {% if i < book.rating|int %}
+                                    <i class="fas fa-star"></i>
+                                {% elif book.rating - i >= 0.5 %}
+                                    <i class="fas fa-star-half-alt"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                            <span>{{ book.rating }}</span>
                         </div>
-                        <span class="resource-difficulty difficulty-intermediate">Intermediate</span>
-                        <a href="#" class="btn btn-secondary">
+                        <span class="resource-difficulty difficulty-{{ book.difficulty }}">{{ book.difficulty|title }}</span>
+                        <a href="{{ book.url }}" class="btn btn-secondary" target="_blank">
                             Learn More
                         </a>
                     </div>
                 </div>
-                
-                <!-- Book 2 -->
-                <div class="resource-card book-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-book"></i>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-book"></i>Book
-                            </span>
-                            <span class="resource-category">Gambling</span>
-                        </div>
-                        <h3 class="card-title">Overcoming Gambling Addiction</h3>
-                        <p class="card-text">A self-help guide using cognitive behavioral therapy techniques to break free from gambling addiction.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Alex Blaszczynski, PhD
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                            <span>4.2</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-beginner">Beginner</span>
-                        <a href="#" class="btn btn-secondary">
-                            Learn More
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Book 3 -->
-                <div class="resource-card book-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-book"></i>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-book"></i>Book
-                            </span>
-                            <span class="resource-category">Food</span>
-                        </div>
-                        <h3 class="card-title">Breaking Free from Emotional Eating</h3>
-                        <p class="card-text">A compassionate guide to understanding and overcoming emotional eating patterns and food addiction.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Geneen Roth
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>4.6</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-intermediate">Intermediate</span>
-                        <a href="#" class="btn btn-secondary">
-                            Learn More
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Book 4 -->
-                <div class="resource-card book-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-book"></i>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-book"></i>Book
-                            </span>
-                            <span class="resource-category">Social Media</span>
-                        </div>
-                        <h3 class="card-title">Digital Minimalism: Choosing a Focused Life</h3>
-                        <p class="card-text">A practical guide to breaking free from technology addiction and reclaiming your time and attention.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Cal Newport
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>4.9</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-beginner">Beginner</span>
-                        <a href="#" class="btn btn-secondary">
-                            Learn More
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Book 5 (New) -->
-                <div class="resource-card book-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-book"></i>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-book"></i>Book
-                            </span>
-                            <span class="resource-category">Alcohol</span>
-                        </div>
-                        <h3 class="card-title">The Sober Diaries</h3>
-                        <p class="card-text">A memoir and guide to quitting alcohol and living a healthier, happier life.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Clare Pooley
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>4.7</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-beginner">Beginner</span>
-                        <a href="#" class="btn btn-secondary">
-                            Learn More
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Book 6 (New) -->
-                <div class="resource-card book-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-book"></i>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-book"></i>Book
-                            </span>
-                            <span class="resource-category">Social Media</span>
-                        </div>
-                        <h3 class="card-title">Hooked: How to Build Habit-Forming Products</h3>
-                        <p class="card-text">Understanding the psychology of habit formation and addiction in the digital age.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Nir Eyal
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>4.5</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-intermediate">Intermediate</span>
-                        <a href="#" class="btn btn-secondary">
-                            Learn More
-                        </a>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
 
@@ -1078,328 +259,108 @@
                 <h2 class="section-title">
                     <i class="fas fa-newspaper"></i>Articles
                 </h2>
-                <span class="resource-count">5 articles</span>
+                <span class="resource-count">{{ articles|length }} articles</span>
             </div>
             <div class="resources-grid">
-                <!-- Article 1 -->
+                {% for article in articles %}
                 <div class="resource-card article-card">
                     <div class="card-content">
                         <div class="resource-meta">
                             <span class="resource-type">
                                 <i class="fas fa-newspaper"></i>Article
                             </span>
-                            <span class="resource-category">Food</span>
+                            <span class="resource-category">{{ addiction_types[article.addiction_type] }}</span>
                         </div>
-                        <h3 class="card-title">Understanding Food Addiction: Signs, Causes, and Recovery</h3>
-                        <p class="card-text">An in-depth article exploring the nature of food addiction and evidence-based approaches to recovery.</p>
+                        <h3 class="card-title">{{ article.title }}</h3>
+                        <p class="card-text">{{ article.description }}</p>
                         <div class="resource-author">
-                            <i class="fas fa-user"></i> Dr. Lisa Marsh
+                            <i class="fas fa-user"></i> {{ article.author }}
                         </div>
                         <div class="resource-duration">
-                            <i class="fas fa-clock"></i> 15 min read
+                            <i class="fas fa-clock"></i> {{ article.reading_time }} read
                         </div>
                         <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                            <span>4.1</span>
+                            {% for i in range(5) %}
+                                {% if i < article.rating|int %}
+                                    <i class="fas fa-star"></i>
+                                {% elif article.rating - i >= 0.5 %}
+                                    <i class="fas fa-star-half-alt"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                            <span>{{ article.rating }}</span>
                         </div>
-                        <span class="resource-difficulty difficulty-beginner">Beginner</span>
-                        <a href="#" class="btn btn-tertiary">
+                        <span class="resource-difficulty difficulty-{{ article.difficulty }}">{{ article.difficulty|title }}</span>
+                        <a href="{{ article.url }}" class="btn btn-tertiary" target="_blank">
                             Read Article
                         </a>
                     </div>
                 </div>
-                
-                <!-- Article 2 -->
-                <div class="resource-card article-card">
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-newspaper"></i>Article
-                            </span>
-                            <span class="resource-category">Social Media</span>
-                        </div>
-                        <h3 class="card-title">Digital Detox: Breaking Free from Social Media Addiction</h3>
-                        <p class="card-text">Practical strategies and tips for reducing social media dependency and building healthier online habits.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> James Wilson, LCSW
-                        </div>
-                        <div class="resource-duration">
-                            <i class="fas fa-clock"></i> 12 min read
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>4.5</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-beginner">Beginner</span>
-                        <a href="#" class="btn btn-tertiary">
-                            Read Article
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Article 3 -->
-                <div class="resource-card article-card">
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-newspaper"></i>Article
-                            </span>
-                            <span class="resource-category">Alcohol</span>
-                        </div>
-                        <h3 class="card-title">The Science of Alcohol Addiction</h3>
-                        <p class="card-text">A comprehensive guide to understanding alcohol addiction, its effects on the body, and evidence-based treatment options.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Dr. Michael Roberts
-                        </div>
-                        <div class="resource-duration">
-                            <i class="fas fa-clock"></i> 20 min read
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>4.8</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-advanced">Advanced</span>
-                        <a href="#" class="btn btn-tertiary">
-                            Read Article
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Article 4 -->
-                <div class="resource-card article-card">
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-newspaper"></i>Article
-                            </span>
-                            <span class="resource-category">Gaming</span>
-                        </div>
-                        <h3 class="card-title">Gaming Addiction in Adolescents: Warning Signs and Intervention</h3>
-                        <p class="card-text">A guide for parents and educators on identifying gaming addiction in young people and effective intervention strategies.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Dr. Sarah Peterson
-                        </div>
-                        <div class="resource-duration">
-                            <i class="fas fa-clock"></i> 18 min read
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                            <span>4.2</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-intermediate">Intermediate</span>
-                        <a href="#" class="btn btn-tertiary">
-                            Read Article
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Article 5 -->
-                <div class="resource-card article-card">
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-newspaper"></i>Article
-                            </span>
-                            <span class="resource-category">Substance Abuse</span>
-                        </div>
-                        <h3 class="card-title">Relapse Prevention: Building a Sustainable Recovery</h3>
-                        <p class="card-text">Evidence-based strategies for preventing relapse and maintaining long-term recovery from substance abuse.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Dr. Thomas Miller
-                        </div>
-                        <div class="resource-duration">
-                            <i class="fas fa-clock"></i> 25 min read
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>4.7</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-intermediate">Intermediate</span>
-                        <a href="#" class="btn btn-tertiary">
-                            Read Article
-                        </a>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
 
-        <!-- Podcasts Section (New) -->
+        <!-- Podcasts Section -->
         <div class="resources-section">
             <div class="section-header">
                 <h2 class="section-title">
                     <i class="fas fa-podcast"></i>Podcasts
                 </h2>
-                <span class="resource-count">4 podcasts</span>
+                <span class="resource-count">{{ podcasts|length }} podcasts</span>
             </div>
             <div class="resources-grid">
-                <!-- Podcast 1 -->
+                {% for podcast in podcasts %}
                 <div class="resource-card podcast-card">
                     <div class="card-media">
                         <div class="placeholder-media">
                             <i class="fas fa-podcast"></i>
                         </div>
-                        <div class="resource-badge">45:22</div>
+                        <div class="resource-badge">{{ podcast.duration }}</div>
                     </div>
                     <div class="card-content">
                         <div class="resource-meta">
                             <span class="resource-type">
                                 <i class="fas fa-podcast"></i>Podcast
                             </span>
-                            <span class="resource-category">Substance Abuse</span>
+                            <span class="resource-category">{{ addiction_types[podcast.addiction_type] }}</span>
                         </div>
-                        <h3 class="card-title">Recovery Stories: Real People, Real Journeys</h3>
-                        <p class="card-text">Inspiring interviews with individuals who have successfully overcome addiction and rebuilt their lives.</p>
+                        <h3 class="card-title">{{ podcast.title }}</h3>
+                        <p class="card-text">{{ podcast.description }}</p>
                         <div class="resource-author">
-                            <i class="fas fa-user"></i> Hosted by Maria Garcia
+                            <i class="fas fa-user"></i> {{ podcast.author }}
                         </div>
                         <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>4.9</span>
+                            {% for i in range(5) %}
+                                {% if i < podcast.rating|int %}
+                                    <i class="fas fa-star"></i>
+                                {% elif podcast.rating - i >= 0.5 %}
+                                    <i class="fas fa-star-half-alt"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                            <span>{{ podcast.rating }}</span>
                         </div>
-                        <a href="#" class="btn btn-primary">
+                        <a href="{{ podcast.url }}" class="btn btn-primary" target="_blank">
                             Listen Now
                         </a>
                     </div>
                 </div>
-                
-                <!-- Podcast 2 -->
-                <div class="resource-card podcast-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-podcast"></i>
-                        </div>
-                        <div class="resource-badge">38:15</div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-podcast"></i>Podcast
-                            </span>
-                            <span class="resource-category">Gaming</span>
-                        </div>
-                        <h3 class="card-title">Gaming Balance: Finding Healthy Relationships with Games</h3>
-                        <p class="card-text">Discussions on maintaining a healthy relationship with gaming and recognizing when it becomes problematic.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Hosted by Jason Lee
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                            <span>4.2</span>
-                        </div>
-                        <a href="#" class="btn btn-primary">
-                            Listen Now
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Podcast 3 -->
-                <div class="resource-card podcast-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-podcast"></i>
-                        </div>
-                        <div class="resource-badge">52:40</div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-podcast"></i>Podcast
-                            </span>
-                            <span class="resource-category">Alcohol</span>
-                        </div>
-                        <h3 class="card-title">Sober Curious: Exploring Life Without Alcohol</h3>
-                        <p class="card-text">Conversations about the sober curious movement and the benefits of reducing or eliminating alcohol consumption.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Hosted by Emma Wilson
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>4.6</span>
-                        </div>
-                        <a href="#" class="btn btn-primary">
-                            Listen Now
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Podcast 4 -->
-                <div class="resource-card podcast-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-podcast"></i>
-                        </div>
-                        <div class="resource-badge">41:18</div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-podcast"></i>Podcast
-                            </span>
-                            <span class="resource-category">Social Media</span>
-                        </div>
-                        <h3 class="card-title">Digital Wellness: Reclaiming Your Attention</h3>
-                        <p class="card-text">Expert discussions on digital wellness and strategies for breaking free from social media addiction.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Hosted by Dr. Alex Chen
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>4.8</span>
-                        </div>
-                        <a href="#" class="btn btn-primary">
-                            Listen Now
-                        </a>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
 
-        <!-- Courses Section (New) -->
+        <!-- Courses Section -->
         <div class="resources-section">
             <div class="section-header">
                 <h2 class="section-title">
                     <i class="fas fa-chalkboard-teacher"></i>Courses
                 </h2>
-                <span class="resource-count">3 courses</span>
+                <span class="resource-count">{{ courses|length }} courses</span>
             </div>
             <div class="resources-grid">
-                <!-- Course 1 -->
+                {% for course in courses %}
                 <div class="resource-card course-card">
                     <div class="card-media">
                         <div class="placeholder-media">
@@ -1411,227 +372,183 @@
                             <span class="resource-type">
                                 <i class="fas fa-chalkboard-teacher"></i>Course
                             </span>
-                            <span class="resource-category">Substance Abuse</span>
+                            <span class="resource-category">{{ addiction_types[course.addiction_type] }}</span>
                         </div>
-                        <h3 class="card-title">Comprehensive Addiction Recovery Program</h3>
-                        <p class="card-text">A structured 8-week course covering all aspects of addiction recovery, from understanding triggers to building a sustainable recovery plan.</p>
+                        <h3 class="card-title">{{ course.title }}</h3>
+                        <p class="card-text">{{ course.description }}</p>
                         <div class="resource-author">
-                            <i class="fas fa-user"></i> Dr. Jennifer Adams
+                            <i class="fas fa-user"></i> {{ course.author }}
                         </div>
                         <div class="resource-duration">
-                            <i class="fas fa-clock"></i> 8 weeks
+                            <i class="fas fa-clock"></i> {{ course.duration }}
                         </div>
                         <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>4.7</span>
+                            {% for i in range(5) %}
+                                {% if i < course.rating|int %}
+                                    <i class="fas fa-star"></i>
+                                {% elif course.rating - i >= 0.5 %}
+                                    <i class="fas fa-star-half-alt"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                            <span>{{ course.rating }}</span>
                         </div>
-                        <span class="resource-difficulty difficulty-intermediate">Intermediate</span>
-                        <a href="#" class="btn btn-secondary">
+                        <span class="resource-difficulty difficulty-{{ course.difficulty }}">{{ course.difficulty|title }}</span>
+                        <a href="{{ course.url }}" class="btn btn-secondary" target="_blank">
                             Enroll Now
                         </a>
                     </div>
                 </div>
-                
-                <!-- Course 2 -->
-                <div class="resource-card course-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-chalkboard-teacher"></i>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-chalkboard-teacher"></i>Course
-                            </span>
-                            <span class="resource-category">Food</span>
-                        </div>
-                        <h3 class="card-title">Mindful Eating: Breaking Free from Food Addiction</h3>
-                        <p class="card-text">A 6-week course on developing a healthier relationship with food through mindfulness practices and cognitive behavioral techniques.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Lisa Johnson, RD
-                        </div>
-                        <div class="resource-duration">
-                            <i class="fas fa-clock"></i> 6 weeks
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                            <span>4.1</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-beginner">Beginner</span>
-                        <a href="#" class="btn btn-secondary">
-                            Enroll Now
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Course 3 -->
-                <div class="resource-card course-card">
-                    <div class="card-media">
-                        <div class="placeholder-media">
-                            <i class="fas fa-chalkboard-teacher"></i>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div class="resource-meta">
-                            <span class="resource-type">
-                                <i class="fas fa-chalkboard-teacher"></i>Course
-                            </span>
-                            <span class="resource-category">Multiple</span>
-                        </div>
-                        <h3 class="card-title">Family Support: Helping Loved Ones with Addiction</h3>
-                        <p class="card-text">A comprehensive course for family members and friends of individuals struggling with addiction, focusing on effective support strategies.</p>
-                        <div class="resource-author">
-                            <i class="fas fa-user"></i> Dr. Michael Torres
-                        </div>
-                        <div class="resource-duration">
-                            <i class="fas fa-clock"></i> 4 weeks
-                        </div>
-                        <div class="resource-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>4.9</span>
-                        </div>
-                        <span class="resource-difficulty difficulty-intermediate">Intermediate</span>
-                        <a href="#" class="btn btn-secondary">
-                            Enroll Now
-                        </a>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block extra_js %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Advanced Filter Dropdown functionality
-        const advancedFilterBtn = document.getElementById('advancedFilterBtn');
-        const closeFilterDropdownBtn = document.getElementById('closeFilterDropdown');
-        const filterDropdownMenu = document.getElementById('filterDropdownMenu');
-        const resetFiltersBtn = document.getElementById('resetFilters');
-        const applyFiltersBtn = document.getElementById('applyFilters');
-        
-        // Toggle filter dropdown
-        if (advancedFilterBtn) {
-            advancedFilterBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                filterDropdownMenu.classList.toggle('show');
-            });
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize dropdown functionality
+    const filterButton = document.querySelector('.btn-filter');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
+    
+    filterButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('show');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!filterButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+            dropdownMenu.classList.remove('show');
         }
-        
-        // Close filter dropdown
-        if (closeFilterDropdownBtn) {
-            closeFilterDropdownBtn.addEventListener('click', function() {
-                filterDropdownMenu.classList.remove('show');
-            });
-        }
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (filterDropdownMenu && filterDropdownMenu.classList.contains('show') && 
-                !filterDropdownMenu.contains(e.target) && 
-                e.target !== advancedFilterBtn) {
-                filterDropdownMenu.classList.remove('show');
-            }
-        });
-        
-        // Prevent dropdown from closing when clicking inside it
-        if (filterDropdownMenu) {
-            filterDropdownMenu.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        }
-        
-        // Filter option selection
-        const filterOptions = document.querySelectorAll('.filter-dropdown-option');
-        filterOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                const filterType = this.getAttribute('data-filter-type');
-                
-                // For filter types that should only have one selection active at a time
-                if (filterType === 'addiction' || filterType === 'resource' || 
-                    filterType === 'difficulty' || filterType === 'duration' || 
-                    filterType === 'rating') {
-                    // Remove active class from all options of the same type
-                    document.querySelectorAll(`.filter-dropdown-option[data-filter-type="${filterType}"]`)
-                        .forEach(opt => opt.classList.remove('active'));
-                }
-                
-                // Toggle active state
-                this.classList.toggle('active');
-            });
-        });
-        
-        // Reset filters
-        if (resetFiltersBtn) {
-            resetFiltersBtn.addEventListener('click', function() {
-                // Reset all filter options to default (only 'all' options active)
-                filterOptions.forEach(option => {
-                    if (option.getAttribute('data-filter-value') === 'all') {
-                        option.classList.add('active');
-                    } else {
-                        option.classList.remove('active');
-                    }
-                });
-            });
-        }
-        
-        // Apply filters
-        if (applyFiltersBtn) {
-            applyFiltersBtn.addEventListener('click', function() {
-                // Get selected filters
-                const selectedFilters = {
-                    addiction: getSelectedFilterValue('addiction'),
-                    resource: getSelectedFilterValue('resource'),
-                    difficulty: getSelectedFilterValue('difficulty'),
-                    duration: getSelectedFilterValue('duration'),
-                    rating: getSelectedFilterValue('rating')
-                };
-                
-                // Build query string
-                let queryParams = [];
-                for (const [key, value] of Object.entries(selectedFilters)) {
-                    if (value !== 'all') {
-                        queryParams.push(`${key}=${value}`);
-                    }
-                }
-                
-                // Redirect to filtered results
-                const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
-                window.location.href = `${window.location.pathname}${queryString}`;
-                
-                // Close dropdown
-                filterDropdownMenu.classList.remove('show');
-            });
-        }
-        
-        // Helper function to get selected filter value
-        function getSelectedFilterValue(filterType) {
-            const activeOption = document.querySelector(`.filter-dropdown-option[data-filter-type="${filterType}"].active`);
-            return activeOption ? activeOption.getAttribute('data-filter-value') : 'all';
-        }
-        
-        // Remove filter tags
-        const removeTagBtns = document.querySelectorAll('.filter-tag .remove');
-        removeTagBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                this.parentElement.remove();
-            });
+    });
+
+    // Search functionality
+    const searchInput = document.querySelector('.search-input');
+    const searchTags = document.querySelectorAll('.search-tag');
+
+    searchTags.forEach(tag => {
+        tag.addEventListener('click', function() {
+            searchInput.value = this.textContent;
+            searchInput.focus();
         });
     });
+
+    // Advanced Filter Dropdown functionality
+    const advancedFilterBtn = document.getElementById('advancedFilterBtn');
+    const closeFilterDropdownBtn = document.getElementById('closeFilterDropdown');
+    const filterDropdownMenu = document.getElementById('filterDropdownMenu');
+    const resetFiltersBtn = document.getElementById('resetFilters');
+    const applyFiltersBtn = document.getElementById('applyFilters');
+    
+    // Toggle filter dropdown
+    if (advancedFilterBtn) {
+        advancedFilterBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            filterDropdownMenu.classList.toggle('show');
+        });
+    }
+    
+    // Close filter dropdown
+    if (closeFilterDropdownBtn) {
+        closeFilterDropdownBtn.addEventListener('click', function() {
+            filterDropdownMenu.classList.remove('show');
+        });
+    }
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (filterDropdownMenu && filterDropdownMenu.classList.contains('show') && 
+            !filterDropdownMenu.contains(e.target) && 
+            e.target !== advancedFilterBtn) {
+            filterDropdownMenu.classList.remove('show');
+        }
+    });
+    
+    // Prevent dropdown from closing when clicking inside it
+    if (filterDropdownMenu) {
+        filterDropdownMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
+    
+    // Filter option selection
+    const filterOptions = document.querySelectorAll('.filter-dropdown-option');
+    filterOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const filterType = this.getAttribute('data-filter-type');
+            
+            // For filter types that should only have one selection active at a time
+            if (filterType === 'addiction' || filterType === 'resource' || 
+                filterType === 'difficulty' || filterType === 'duration' || 
+                filterType === 'rating') {
+                // Remove active class from all options of the same type
+                document.querySelectorAll(`.filter-dropdown-option[data-filter-type="${filterType}"]`)
+                    .forEach(opt => opt.classList.remove('active'));
+            }
+            
+            // Toggle active state
+            this.classList.toggle('active');
+        });
+    });
+    
+    // Reset filters
+    if (resetFiltersBtn) {
+        resetFiltersBtn.addEventListener('click', function() {
+            // Reset all filter options to default (only 'all' options active)
+            filterOptions.forEach(option => {
+                if (option.getAttribute('data-filter-value') === 'all') {
+                    option.classList.add('active');
+                } else {
+                    option.classList.remove('active');
+                }
+            });
+        });
+    }
+    
+    // Apply filters
+    if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener('click', function() {
+            // Get selected filters
+            const selectedFilters = {
+                addiction: getSelectedFilterValue('addiction'),
+                resource: getSelectedFilterValue('resource'),
+                difficulty: getSelectedFilterValue('difficulty'),
+                duration: getSelectedFilterValue('duration'),
+                rating: getSelectedFilterValue('rating')
+            };
+            
+            // Build query string
+            let queryParams = [];
+            for (const [key, value] of Object.entries(selectedFilters)) {
+                if (value !== 'all') {
+                    queryParams.push(`${key}=${value}`);
+                }
+            }
+            
+            // Redirect to filtered results
+            const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+            window.location.href = `${window.location.pathname}${queryString}`;
+            
+            // Close dropdown
+            filterDropdownMenu.classList.remove('show');
+        });
+    }
+    
+    // Helper function to get selected filter value
+    function getSelectedFilterValue(filterType) {
+        const activeOption = document.querySelector(`.filter-dropdown-option[data-filter-type="${filterType}"].active`);
+        return activeOption ? activeOption.getAttribute('data-filter-value') : 'all';
+    }
+    
+    // Remove filter tags
+    const removeTagBtns = document.querySelectorAll('.filter-tag .remove');
+    removeTagBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.parentElement.remove();
+        });
+    });
+});
 </script>
 {% endblock %}

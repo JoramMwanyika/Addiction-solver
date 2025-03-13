@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Add Educational Resource</h1>
+    
+    <form method="POST" class="needs-validation" novalidate>
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label for="resource_type" class="form-label">Resource Type</label>
+            <select class="form-select" id="resource_type" name="resource_type" required>
+                <option value="video">Video</option>
+                <option value="book">Book</option>
+                <option value="blog">Blog/Article</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label for="addiction_type" class="form-label">Addiction Category</label>
+            <select class="form-select" id="addiction_type" name="addiction_type" required>
+                {% for type, name in addiction_types.items() %}
+                <option value="{{ type }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label for="url" class="form-label">Resource URL</label>
+            <input type="url" class="form-control" id="url" name="url" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="thumbnail_url" class="form-label">Thumbnail URL (Optional)</label>
+            <input type="url" class="form-control" id="thumbnail_url" name="thumbnail_url">
+            <div class="form-text">Provide a URL for an image that represents this resource (recommended for videos and books)</div>
+        </div>
+        
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="{{ url_for('resources') }}" class="btn btn-secondary me-md-2">Cancel</a>
+            <button type="submit" class="btn btn-primary">Add Resource</button>
+        </div>
+    </form>
+</div>
+
+<script>
+// Form validation
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+</script>
+{% endblock %} 

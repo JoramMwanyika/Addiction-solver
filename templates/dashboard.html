@@ -3,36 +3,120 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-    <h1>Welcome, {{ current_user.username }}!</h1>
-    
-    {% if recovery_plan %}
-        <h2>Your Recovery Plan</h2>
-        <div class="recovery-plan">
-            <p><strong>Addiction Type:</strong> {{ recovery_plan.addiction_type }}</p>
-            <p><strong>Goals:</strong> {{ recovery_plan.goals }}</p>
-            <p><strong>Strategies:</strong> {{ recovery_plan.strategies }}</p>
+<div class="dashboard">
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>Welcome, {{ current_user.username }}!</h1>
+            <p>Track your recovery journey and access personalized resources.</p>
         </div>
-    {% else %}
-        <p>You haven't created a recovery plan yet.</p>
-        <a href="{{ url_for('create_recovery_plan') }}" class="button">Create Recovery Plan</a>
-    {% endif %}
-    
-    <h2>Recent Progress</h2>
-    {% if progress_logs %}
-        <div class="progress-logs">
-            {% for log in progress_logs %}
-                <div class="progress-log">
-                    <p><strong>Date:</strong> {{ log.date }}</p>
-                    <p><strong>Mood:</strong> {{ log.mood }}/10</p>
-                    <p><strong>Cravings:</strong> {{ log.cravings }}/10</p>
-                    <p><strong>Notes:</strong> {{ log.notes }}</p>
+        
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2>Your Recovery Plan</h2>
+                    {% if not recovery_plan %}
+                        <a href="{{ url_for('create_recovery_plan') }}" class="btn btn-primary btn-sm">Create Plan</a>
+                    {% endif %}
                 </div>
-            {% endfor %}
+                <div class="card-body">
+                    {% if recovery_plan %}
+                        <div class="recovery-plan-details">
+                            <div class="detail-item">
+                                <h3>Addiction Type</h3>
+                                <p>{{ recovery_plan.addiction_type }}</p>
+                            </div>
+                            <div class="detail-item">
+                                <h3>Goals</h3>
+                                <p>{{ recovery_plan.goals }}</p>
+                            </div>
+                            <div class="detail-item">
+                                <h3>Strategies</h3>
+                                <p>{{ recovery_plan.strategies }}</p>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <p>You haven't created a recovery plan yet.</p>
+                            <a href="{{ url_for('create_recovery_plan') }}" class="btn btn-primary">Create Recovery Plan</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2>Recent Progress</h2>
+                    <a href="{{ url_for('log_progress') }}" class="btn btn-primary btn-sm">Log Progress</a>
+                </div>
+                <div class="card-body">
+                    {% if progress_logs %}
+                        <div class="progress-logs">
+                            {% for log in progress_logs %}
+                                <div class="progress-log">
+                                    <div class="log-header">
+                                        <span class="log-date">{{ log.date.strftime('%b %d, %Y') }}</span>
+                                        <div class="log-metrics">
+                                            <span class="metric">
+                                                <i class="fas fa-smile"></i> Mood: {{ log.mood }}/10
+                                            </span>
+                                            <span class="metric">
+                                                <i class="fas fa-fire"></i> Cravings: {{ log.cravings }}/10
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p class="log-notes">{{ log.notes }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <p>You haven't logged any progress yet.</p>
+                            <a href="{{ url_for('log_progress') }}" class="btn btn-primary">Log Progress</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-    {% else %}
-        <p>You haven't logged any progress yet.</p>
-    {% endif %}
-    
-    <a href="{{ url_for('log_progress') }}" class="button">Log Progress</a>
+        
+        <div class="dashboard-card quick-actions">
+            <div class="card-header">
+                <h2>Quick Actions</h2>
+            </div>
+            <div class="card-body">
+                <div class="action-grid">
+                    <a href="{{ url_for('educational_resources') }}" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-book-reader"></i>
+                        </div>
+                        <h3>Educational Resources</h3>
+                    </a>
+                    <a href="{{ url_for('resources') }}" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-hands-helping"></i>
+                        </div>
+                        <h3>Support Networks</h3>
+                    </a>
+                    <a href="{{ url_for('log_progress') }}" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Log Progress</h3>
+                    </a>
+                    <a href="#" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <h3>Settings</h3>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
-

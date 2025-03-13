@@ -16,25 +16,33 @@
 
 <section class="features">
     <div class="container">
-        <h2>How We Help</h2>
+        <h2 class="section-title">How We Help</h2>
         <div class="feature-grid">
             <div class="feature-card">
-                <i class="fas fa-chart-line"></i>
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
                 <h3>Track Your Progress</h3>
                 <p>Monitor your journey with easy-to-use tools and visualizations.</p>
             </div>
             <div class="feature-card">
-                <i class="fas fa-users"></i>
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
                 <h3>Community Support</h3>
                 <p>Connect with others on similar journeys for motivation and advice.</p>
             </div>
             <div class="feature-card">
-                <i class="fas fa-book-reader"></i>
+                <div class="feature-icon">
+                    <i class="fas fa-book-reader"></i>
+                </div>
                 <h3>Educational Resources</h3>
                 <p>Access a wealth of information to understand and overcome addiction.</p>
             </div>
             <div class="feature-card">
-                <i class="fas fa-user-md"></i>
+                <div class="feature-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
                 <h3>Professional Guidance</h3>
                 <p>Get support from licensed therapists and addiction specialists.</p>
             </div>
@@ -44,19 +52,25 @@
 
 <section class="testimonials">
     <div class="container">
-        <h2>Success Stories</h2>
+        <h2 class="section-title">Success Stories</h2>
         <div class="testimonial-slider">
             <div class="testimonial">
-                <p>"Addiction Solver gave me the tools and support I needed to turn my life around. I'm now 2 years sober and happier than ever."</p>
-                <cite>- Sarah M.</cite>
+                <div class="testimonial-content">
+                    <p>"Addiction Solver gave me the tools and support I needed to turn my life around. I'm now 2 years sober and happier than ever."</p>
+                    <cite>- Sarah M.</cite>
+                </div>
             </div>
             <div class="testimonial">
-                <p>"The community here is incredible. Knowing I'm not alone in this journey has made all the difference."</p>
-                <cite>- John D.</cite>
+                <div class="testimonial-content">
+                    <p>"The community here is incredible. Knowing I'm not alone in this journey has made all the difference."</p>
+                    <cite>- John D.</cite>
+                </div>
             </div>
             <div class="testimonial">
-                <p>"The personalized recovery plan helped me tackle my addiction one day at a time. I'm grateful for this platform."</p>
-                <cite>- Emily R.</cite>
+                <div class="testimonial-content">
+                    <p>"The personalized recovery plan helped me tackle my addiction one day at a time. I'm grateful for this platform."</p>
+                    <cite>- Emily R.</cite>
+                </div>
             </div>
         </div>
     </div>
@@ -66,8 +80,7 @@
     <div class="container">
         <h2>Ready to Take the First Step?</h2>
         <p>Join Addiction Solver today and start your journey towards a healthier, addiction-free life.</p>
-        <a href="{{ url_for('register') }}" class="btn btn-primary btn-large">Sign Up Now</a>
+        <a href="{{ url_for('register') }}" class="btn btn-light btn-large">Sign Up Now</a>
     </div>
 </section>
 {% endblock %}
-

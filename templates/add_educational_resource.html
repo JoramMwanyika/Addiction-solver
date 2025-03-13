@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Add Educational Resource{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h1 class="card-title h3 mb-4">Add Educational Resource</h1>
+                    
+                    <form method="POST" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                            <div class="invalid-feedback">
+                                Please provide a title for the resource.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                            <div class="invalid-feedback">
+                                Please provide a description for the resource.
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="resource_type" class="form-label">Resource Type</label>
+                                <select class="form-select" id="resource_type" name="resource_type" required>
+                                    <option value="" selected disabled>Choose resource type...</option>
+                                    <option value="video">Video</option>
+                                    <option value="book">Book</option>
+                                    <option value="blog">Blog/Article</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please select a resource type.
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="addiction_type" class="form-label">Addiction Category</label>
+                                <select class="form-select" id="addiction_type" name="addiction_type" required>
+                                    <option value="" selected disabled>Choose category...</option>
+                                    {% for type, name in addiction_types.items() %}
+                                    <option value="{{ type }}">{{ name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please select an addiction category.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="url" class="form-label">Resource URL</label>
+                            <input type="url" class="form-control" id="url" name="url" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid URL.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="thumbnail_url" class="form-label">Thumbnail URL (Optional)</label>
+                            <input type="url" class="form-control" id="thumbnail_url" name="thumbnail_url">
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Provide a URL for an image that represents this resource (recommended for videos and books)
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('educational_resources') }}" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-times me-1"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus me-1"></i>Add Resource
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+</script>
+{% endblock %} 

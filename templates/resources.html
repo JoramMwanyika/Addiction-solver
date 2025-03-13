@@ -3,36 +3,90 @@
 {% block title %}Resources{% endblock %}
 
 {% block content %}
-<section class="resources-section">
+<div class="resources-page">
     <div class="container">
-        <h1>Educational Resources</h1>
+        <div class="page-header">
+            <h1>Recovery Resources</h1>
+            <p class="lead">Find help and support for your recovery journey.</p>
+        </div>
+
         <div class="resources-grid">
+            <!-- Educational Resources Card -->
             <div class="resource-card">
-                <i class="fas fa-brain"></i>
-                <h2>Understanding Addiction</h2>
-                <p>Learn about the science behind addiction and how it affects the brain.</p>
-                <a href="#" class="btn btn-secondary">Read More</a>
+                <div class="card-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h2>Educational Resources</h2>
+                <p>Access our curated collection of videos, books, and articles about addiction recovery.</p>
+                <a href="{{ url_for('educational_resources') }}" class="btn btn-primary">
+                    <i class="fas fa-book-reader me-2"></i>Browse Educational Content
+                </a>
             </div>
+
+            <!-- Support Networks Card -->
             <div class="resource-card">
-                <i class="fas fa-hands-helping"></i>
-                <h2>Coping Strategies</h2>
-                <p>Discover effective techniques for managing cravings and stress.</p>
-                <a href="#" class="btn btn-secondary">Read More</a>
-            </div>
-            <div class="resource-card">
-                <i class="fas fa-users"></i>
+                <div class="card-icon">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
                 <h2>Support Networks</h2>
-                <p>Find information on building and maintaining a strong support system.</p>
-                <a href="#" class="btn btn-secondary">Read More</a>
+                <p>Connect with support groups and professional help in your area.</p>
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-users me-2"></i>Find Support
+                </a>
             </div>
+
+            <!-- Treatment Options Card -->
             <div class="resource-card">
-                <i class="fas fa-book-medical"></i>
+                <div class="card-icon">
+                    <i class="fas fa-hospital"></i>
+                </div>
                 <h2>Treatment Options</h2>
-                <p>Explore various treatment methods and find what works best for you.</p>
-                <a href="#" class="btn btn-secondary">Read More</a>
+                <p>Explore various treatment methods and professional services available.</p>
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-clinic-medical me-2"></i>View Treatments
+                </a>
+            </div>
+
+            <!-- Emergency Help Card -->
+            <div class="resource-card">
+                <div class="card-icon">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <h2>Emergency Help</h2>
+                <p>24/7 helplines and emergency contacts for immediate assistance.</p>
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-ambulance me-2"></i>Get Help Now
+                </a>
+            </div>
+        </div>
+
+        <!-- Additional Resources Section -->
+        <div class="additional-resources">
+            <h2>Additional Resources</h2>
+            <div class="resource-list">
+                <a href="#" class="resource-item">
+                    <div class="resource-info">
+                        <h3>National Addiction Hotline</h3>
+                        <p>24/7 confidential support and guidance</p>
+                    </div>
+                    <div class="resource-badge">1-800-662-4357</div>
+                </a>
+                <a href="#" class="resource-item">
+                    <div class="resource-info">
+                        <h3>Find Local Support Groups</h3>
+                        <p>Connect with others in your area</p>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                <a href="#" class="resource-item">
+                    <div class="resource-info">
+                        <h3>Online Community Forums</h3>
+                        <p>Share experiences and get support online</p>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
             </div>
         </div>
     </div>
-</section>
+</div>
 {% endblock %}
-
